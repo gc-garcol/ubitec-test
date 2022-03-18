@@ -98,28 +98,28 @@ public class Range<T extends Comparable> {
   enum RangeString {
     OPEN(
             range -> String.format("(%s, %s)", range.lowerbound, range.upperbound),
-            Pattern.compile("^\\(\\w+, \\w+\\)$")),
+            Pattern.compile("^\\([\\w-\\.]+, [\\w-\\.]+\\)$")),
     CLOSE(
             range -> String.format("[%s, %s]", range.lowerbound, range.upperbound),
-            Pattern.compile("^\\[\\w+, \\w+\\]$")),
+            Pattern.compile("^\\[[\\w-\\.]+, [\\w-\\.]+\\]$")),
     OPEN_CLOSED(
             range -> String.format("(%s, %s]", range.lowerbound, range.upperbound),
-            Pattern.compile("^\\(\\w+, \\w+\\]$")),
+            Pattern.compile("^\\([\\w-\\.]+, [\\w-\\.]+\\]$")),
     CLOSED_OPEN(
             range -> String.format("[%s, %s)", range.lowerbound, range.upperbound),
-            Pattern.compile("^\\[\\w+, \\w+\\)$")),
+            Pattern.compile("^\\[[\\w-\\.]w+, [\\w-\\.]+\\)$")),
     LESS_THAN(
             range -> String.format("[%s, %s)", RangeString.INFINITY, range.upperbound),
-            Pattern.compile("^\\[Infinitive, \\w+\\)$", Pattern.CASE_INSENSITIVE)),
+            Pattern.compile("^\\[Infinitive, [\\w-\\.]+\\)$", Pattern.CASE_INSENSITIVE)),
     AT_LEAST(
             range -> String.format("[%s, %s]", range.lowerbound, RangeString.INFINITY),
-            Pattern.compile("^\\[\\w+, Infinitive\\]$", Pattern.CASE_INSENSITIVE)),
+            Pattern.compile("^\\[[\\w-\\.]+, Infinitive\\]$", Pattern.CASE_INSENSITIVE)),
     AT_MOST(
             range -> String.format("[%s, %s]", RangeString.INFINITY, range.upperbound),
-            Pattern.compile("^\\[Infinitive, \\w+\\]$", Pattern.CASE_INSENSITIVE)),
+            Pattern.compile("^\\[Infinitive, [\\w-\\.]+\\]$", Pattern.CASE_INSENSITIVE)),
     GREATER_THAN(
             range -> String.format("(%s, %s]", range.lowerbound, RangeString.INFINITY),
-            Pattern.compile("^\\(\\w+, Infinitive\\]$", Pattern.CASE_INSENSITIVE)),
+            Pattern.compile("^\\([\\w-\\.]+, Infinitive\\]$", Pattern.CASE_INSENSITIVE)),
     ALL(
             range -> String.format("[%s, %s]", RangeString.INFINITY, RangeString.INFINITY),
             Pattern.compile("^\\[Infinitive, Infinitive\\]$", Pattern.CASE_INSENSITIVE));

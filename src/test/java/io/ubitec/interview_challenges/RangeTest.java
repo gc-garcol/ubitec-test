@@ -6,8 +6,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.*;
 
 public class RangeTest {
 
@@ -126,6 +125,18 @@ public class RangeTest {
     Range<Integer> lessThan100 = Range.parse(rangeString, Integer.class);
     assert lessThan100.toString().equals("[Infinitive, 100)");
     assert lessThan100.contains(99);
+
+    Range<LocalDate> within2020 = Range.open(
+            LocalDate.of(2020, Month.JANUARY, 1),
+            LocalDate.of(2020, Month.DECEMBER, 31)
+    );
+    String string = within2020.toString();
+    Range<LocalDate> within2020Parsed = Range.parse(string, LocalDate.class);
+    assert within2020Parsed.contains(LocalDate.of(2020, Month.JANUARY, 2));
+
+    String doubleString = Range.openClosed(10.0, 11.1).toString();
+    Range<Double> doubleRange = Range.parse(doubleString, Double.class);
+    assert doubleRange.contains(10.5);
   }
 
 }
