@@ -47,4 +47,22 @@ public class RangeTest {
     assertThat(range1.contains(10)).isEqualTo( true);
     assertThat(range2.contains(10)).isEqualTo( false);
   }
+
+  @Test
+  public void close_opened_openClosed_closedOpen_should_be_valid() {
+    Range open = Range.open(5, 7);
+    assertThat(open.contains(5)).isEqualTo(false);
+
+    Range closed = Range.closed(5, 7);
+    assertThat(closed.contains(5)).isEqualTo(true);
+
+    Range openClosed = Range.openClosed(5, 7);
+    assertThat(openClosed.contains(5)).isEqualTo(false);
+    assertThat(openClosed.contains(7)).isEqualTo(true);
+
+    Range closedOpen = Range.closedOpen(5, 7);
+    assertThat(closedOpen.contains(5)).isEqualTo(true);
+    assertThat(closedOpen.contains(7)).isEqualTo(false);
+  }
+
 }

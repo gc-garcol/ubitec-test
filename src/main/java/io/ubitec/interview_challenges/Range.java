@@ -18,11 +18,24 @@ public class Range {
     this.upperbound = upperbound;
   }
 
-  /**
-   * Creates a new <b>closed</b> {@code Range} that includes both bounds.
-   */
   public static Range of(int lowerbound, int upperbound) {
     return new Range(lowerbound, upperbound);
+  }
+
+  public static Range open(int lowerbound, int upperbound) {
+    return new Range(lowerbound + 1, upperbound - 1);
+  }
+
+  public static Range closed(int lowerbound, int upperbound) {
+    return of(lowerbound, upperbound);
+  }
+
+  public static Range openClosed(int lowerbound, int upperbound) {
+    return new Range(lowerbound + 1, upperbound);
+  }
+
+  public static Range closedOpen(int lowerbound, int upperbound) {
+    return new Range(lowerbound, upperbound - 1);
   }
 
   /**
