@@ -1,6 +1,7 @@
 package io.ubitec.interview_challenges;
 
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 public class Range<T extends Comparable> {
 
@@ -11,6 +12,27 @@ public class Range<T extends Comparable> {
   private final RangeType rangeType;
 
   enum RangeType {
+    OPEN(RangeContains.OPEN, RangeString.OPEN),
+    CLOSE(RangeContains.CLOSE, RangeString.CLOSE),
+    OPEN_CLOSED(RangeContains.OPEN_CLOSED, RangeString.OPEN_CLOSED),
+    CLOSED_OPEN(RangeContains.CLOSED_OPEN, RangeString.CLOSED_OPEN),
+    LESS_THAN(RangeContains.LESS_THAN, RangeString.LESS_THAN),
+    AT_LEAST(RangeContains.AT_LEAST, RangeString.AT_LEAST),
+    AT_MOST(RangeContains.AT_MOST, RangeString.AT_MOST),
+    GREATER_THAN(RangeContains.GREATER_THAN, RangeString.GREATER_THAN),
+    ALL(RangeContains.ALL, RangeString.ALL);
+
+    RangeContains rangeContains;
+    RangeString rangeString;
+
+    RangeType(RangeContains rangeContains, RangeString rangeString) {
+      this.rangeContains = rangeContains;
+      this.rangeString = rangeString;
+    }
+
+  }
+
+  enum RangeContains {
     OPEN((range, comparedValue) -> range.lowerbound.compareTo(comparedValue) < 0 && range.upperbound.compareTo(comparedValue) > 0),
     CLOSE((range, comparedValue) -> range.lowerbound.compareTo(comparedValue) <= 0 && range.upperbound.compareTo(comparedValue) >= 0),
     OPEN_CLOSED((range, comparedValue) -> range.lowerbound.compareTo(comparedValue) < 0 && range.upperbound.compareTo(comparedValue) >= 0),
@@ -23,12 +45,36 @@ public class Range<T extends Comparable> {
 
     BiFunction<Range, Comparable, Boolean> contains;
 
-    RangeType(BiFunction<Range, Comparable, Boolean> contains) {
+    RangeContains(BiFunction<Range, Comparable, Boolean> contains) {
       this.contains = contains;
     }
 
     <T extends Comparable> boolean contains(Range range, T comparedValue) {
       return contains.apply(range, comparedValue);
+    }
+  }
+
+  enum RangeString {
+    OPEN(range -> String.format("(%s, %s)", range.lowerbound, range.upperbound)),
+    CLOSE(range -> String.format("[%s, %s]", range.lowerbound, range.upperbound)),
+    OPEN_CLOSED(range -> String.format("[%s, %s)", range.lowerbound, range.upperbound)),
+    CLOSED_OPEN(range -> String.format("[%s, %s)", range.lowerbound, range.upperbound)),
+    LESS_THAN(range -> String.format("[%s, %s)", RangeString.INFINITY, range.upperbound)),
+    AT_LEAST(range -> String.format("[%s, %s]", range.lowerbound, RangeString.INFINITY)),
+    AT_MOST(range -> String.format("[%s, %s]", RangeString.INFINITY, range.upperbound)),
+    GREATER_THAN(range -> String.format("(%s, %s]", range.lowerbound, RangeString.INFINITY)),
+    ALL(range -> String.format("[%s, %s]", RangeString.INFINITY, RangeString.INFINITY));
+
+    static final String INFINITY = "Infinitive";
+
+    Function<Range, String> tostring;
+
+    RangeString(Function<Range, String> tostring) {
+      this.tostring = tostring;
+    }
+
+    String toString(Range range) {
+      return tostring.apply(range);
     }
   }
 
@@ -56,7 +102,7 @@ public class Range<T extends Comparable> {
   }
 
   public static <T extends Comparable> Range open(T lowerbound, T upperbound) {
-    return new Range(lowerbound, upperbound,RangeType.OPEN);
+    return new Range(lowerbound, upperbound, RangeType.OPEN);
   }
 
   public static <T extends Comparable> Range closed(T lowerbound, T upperbound) {
@@ -96,7 +142,12 @@ public class Range<T extends Comparable> {
    * {@code Range}.
    */
   public boolean contains(T value) {
-    return rangeType.contains(this, value);
+    return rangeType.rangeContains.contains(this, value);
+  }
+
+  @Override
+  public String toString() {
+    return rangeType.rangeString.toString(this);
   }
 
   /**

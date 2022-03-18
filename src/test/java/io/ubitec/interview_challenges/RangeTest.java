@@ -6,7 +6,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 public class RangeTest {
 
@@ -104,6 +105,19 @@ public class RangeTest {
     assertThat(all.contains("anything")).isEqualTo(true);
     assertThat(all.contains("")).isEqualTo(true);
     assertThat(all.contains(null)).isEqualTo(true);
+  }
+
+  @Test
+  public void should_to_string_valid_format() {
+    Range<Integer> lessThen100 = Range.lessThan(100);
+    assertThat(lessThen100.toString()).isEqualTo("[Infinitive, 100)");
+
+    Range<LocalDate> within2020 = Range.closed(
+            LocalDate.of(2020, Month.JANUARY, 1),
+            LocalDate.of(2020, Month.DECEMBER, 31)
+    );
+
+    assertThat(within2020.toString()).isEqualTo("[2020-01-01, 2020-12-31]");
   }
 
 }
