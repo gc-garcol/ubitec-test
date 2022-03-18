@@ -1,6 +1,11 @@
 package io.ubitec.interview_challenges;
 
 import org.junit.jupiter.api.Test;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.Month;
+
 import static org.assertj.core.api.Assertions.*;
 
 public class RangeTest {
@@ -63,6 +68,15 @@ public class RangeTest {
     Range closedOpen = Range.closedOpen(5, 7);
     assertThat(closedOpen.contains(5)).isEqualTo(true);
     assertThat(closedOpen.contains(7)).isEqualTo(false);
+  }
+
+  @Test
+  public void should_create_generic_range() {
+    Range<String> text = Range.open("abc", "xyz");
+
+    Range<BigDecimal> decimals = Range.open(BigDecimal.valueOf(1.32432), BigDecimal.valueOf(1.324323423423423423423));
+
+    Range<LocalDate> dates = Range.closed(LocalDate.of(2016, Month.SEPTEMBER, 11), LocalDate.of(2017, Month.JUNE, 30));
   }
 
 }
