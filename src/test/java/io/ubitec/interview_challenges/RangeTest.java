@@ -120,4 +120,12 @@ public class RangeTest {
     assertThat(within2020.toString()).isEqualTo("[2020-01-01, 2020-12-31]");
   }
 
+  @Test
+  public void should_parse_from_string() {
+    String rangeString = Range.lessThan(100).toString();
+    Range<Integer> lessThan100 = Range.parse(rangeString, Integer.class);
+    assert lessThan100.toString().equals("[Infinitive, 100)");
+    assert lessThan100.contains(99);
+  }
+
 }
