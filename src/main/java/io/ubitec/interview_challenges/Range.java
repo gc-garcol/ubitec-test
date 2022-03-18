@@ -14,7 +14,12 @@ public class Range<T extends Comparable> {
     OPEN((range, comparedValue) -> range.lowerbound.compareTo(comparedValue) < 0 && range.upperbound.compareTo(comparedValue) > 0),
     CLOSE((range, comparedValue) -> range.lowerbound.compareTo(comparedValue) <= 0 && range.upperbound.compareTo(comparedValue) >= 0),
     OPEN_CLOSED((range, comparedValue) -> range.lowerbound.compareTo(comparedValue) < 0 && range.upperbound.compareTo(comparedValue) >= 0),
-    CLOSED_OPEN((range, comparedValue) -> range.lowerbound.compareTo(comparedValue) <= 0 && range.upperbound.compareTo(comparedValue) > 0);
+    CLOSED_OPEN((range, comparedValue) -> range.lowerbound.compareTo(comparedValue) <= 0 && range.upperbound.compareTo(comparedValue) > 0),
+    LESS_THAN((range, comparedValue) -> range.upperbound.compareTo(comparedValue) > 0),
+    AT_LEAST((range, comparedValue) -> range.lowerbound.compareTo(comparedValue) <= 0),
+    AT_MOST((range, comparedValue) -> range.upperbound.compareTo(comparedValue) >= 0),
+    GREATER_THAN((range, comparedValue) -> range.lowerbound.compareTo(comparedValue) < 0),
+    ALL((range, comparedValue) -> true);
 
     BiFunction<Range, Comparable, Boolean> contains;
 
@@ -40,6 +45,12 @@ public class Range<T extends Comparable> {
     this.rangeType = rangeType;
   }
 
+  private Range() {
+    this.rangeType = RangeType.ALL;
+    this.lowerbound = null;
+    this.upperbound = null;
+  }
+
   public static <T extends Comparable> Range of(T lowerbound, T upperbound) {
     return new Range(lowerbound, upperbound, RangeType.CLOSE);
   }
@@ -58,6 +69,26 @@ public class Range<T extends Comparable> {
 
   public static <T extends Comparable> Range closedOpen(T lowerbound, T upperbound) {
     return new Range(lowerbound, upperbound, RangeType.CLOSED_OPEN);
+  }
+
+  public static <T extends Comparable> Range lessThan(T value) {
+    return new Range(value, value, RangeType.LESS_THAN);
+  }
+
+  public static <T extends Comparable> Range atLeast(T value) {
+    return new Range(value, value, RangeType.AT_LEAST);
+  }
+
+  public static <T extends Comparable> Range atMost(T value) {
+    return new Range(value, value, RangeType.AT_MOST);
+  }
+
+  public static <T extends Comparable> Range greaterThan(T value) {
+    return new Range(value, value, RangeType.GREATER_THAN);
+  }
+
+  public static <T extends Comparable> Range all() {
+    return new Range();
   }
 
   /**

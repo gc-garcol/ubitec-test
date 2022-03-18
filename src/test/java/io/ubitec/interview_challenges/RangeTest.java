@@ -79,4 +79,31 @@ public class RangeTest {
     Range<LocalDate> dates = Range.closed(LocalDate.of(2016, Month.SEPTEMBER, 11), LocalDate.of(2017, Month.JUNE, 30));
   }
 
+  @Test
+  public void should_infinitive_be_valid() {
+    Range<Integer> lessThanFive = Range.lessThan(5); // [Infinitive, 5)
+    assertThat(lessThanFive.contains(5)).isEqualTo(false);
+    assertThat(lessThanFive.contains(-9000)).isEqualTo(true);
+
+    Range<Integer> atLeastFive = Range.atLeast(5); // [5, Infinitive]
+    assertThat(atLeastFive.contains(5)).isEqualTo(true);
+    assertThat(atLeastFive.contains(4)).isEqualTo(false);
+
+    Range<Integer> atMostFive = Range.atMost(5); // [Infinitive, 5]
+    assertThat(atMostFive.contains(5)).isEqualTo(true);
+    assertThat(atMostFive.contains(-234234)).isEqualTo(true);
+    assertThat(atMostFive.contains(6)).isEqualTo(false);
+
+
+    Range<LocalDate> afterEpoch = Range.greaterThan(LocalDate.of(1900, Month.JANUARY, 1)); // (1900-01-01, Infinitive]
+    assertThat(afterEpoch.contains(LocalDate.of(2016, Month.JULY, 28))).isEqualTo(true);
+    assertThat(afterEpoch.contains(LocalDate.of(1750, Month.JANUARY, 1))).isEqualTo(false);
+
+
+    Range<String> all = Range.all(); // [Infinitive, Infinitive]
+    assertThat(all.contains("anything")).isEqualTo(true);
+    assertThat(all.contains("")).isEqualTo(true);
+    assertThat(all.contains(null)).isEqualTo(true);
+  }
+
 }
